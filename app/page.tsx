@@ -45,53 +45,17 @@ export default function Home() {
 
     setFormState("submitting");
 
-    // Submit via hidden iframe so we stay on casaflux.com
-    // The form posts to N8N directly — no CORS issue with form submissions
-    const iframe = document.createElement("iframe");
-    iframe.name = "cf_submit_frame";
-    iframe.style.display = "none";
-    document.body.appendChild(iframe);
-
-    const hiddenForm = document.createElement("form");
-    hiddenForm.method = "POST";
-    hiddenForm.action = N8N_FORM_URL;
-    hiddenForm.enctype = "multipart/form-data";
-    hiddenForm.target = "cf_submit_frame";
-
-    // Copy all form data into hidden form
-    const fields = [
-      ["Property Address", formData.get("Property Address") as string],
-      ["Agent / Client Name", formData.get("Agent / Client Name") as string],
-      ["Agent / Client Email", formData.get("Agent / Client Email") as string],
-      ["Report Source (e.g. Spectora, HomeGauge, other)", formData.get("Report Source (e.g. Spectora, HomeGauge, other)") as string],
-    ];
-
-    fields.forEach(([name, value]) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = name;
-      input.value = value || "";
-      hiddenForm.appendChild(input);
-    });
-
-    // File input must be the real one
-    const fileInput = formRef.current.querySelector('input[type="file"]') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.name = "Inspection_Report";
-      hiddenForm.appendChild(fileInput.cloneNode(true));
-      // Re-attach original to keep files
-      hiddenForm.appendChild(fileInput);
-    }
-
-    document.body.appendChild(hiddenForm);
-    hiddenForm.submit();
-
-    // Show success after 3 seconds — N8N processes async
-    setTimeout(() => {
+    try {
+      await fetch(N8N_FORM_URL, {
+        method: "POST",
+        body: formData,
+        mode: "no-cors",
+      });
+      // no-cors means success if no network error thrown
       setFormState("success");
-      document.body.removeChild(iframe);
-      document.body.removeChild(hiddenForm);
-    }, 3000);
+    } catch {
+      setFormState("error");
+    }
   };
 
   const s = (base: React.CSSProperties): React.CSSProperties => base;
