@@ -15,18 +15,15 @@ export default function Home() {
 
   const [showSuccess, setShowSuccess] = React.useState(false);
 
-  const go = () => {
-    const popup = window.open(N8N_FORM_URL, 'casaflux_form', 'width=600,height=700,scrollbars=yes,resizable=yes');
-    if (popup) {
-      const timer = setInterval(() => {
-        if (popup.closed) {
-          clearInterval(timer);
-          setShowSuccess(true);
-        }
-      }, 500);
-    } else {
-      window.location.href = N8N_FORM_URL;
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('submitted=true')) {
+      setShowSuccess(true);
+      window.history.replaceState({}, '', '/');
     }
+  }, []);
+
+  const go = () => {
+    window.location.href = N8N_FORM_URL;
   };
 
   const s = (base: React.CSSProperties): React.CSSProperties => base;
