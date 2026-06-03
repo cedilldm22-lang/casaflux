@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const N8N_FORM_URL = "https://flux1.app.n8n.cloud/form/f6f81001-50f4-42d9-bc6c-b29df62e00d4";
 
@@ -13,12 +13,42 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  const go = () => window.location.href = N8N_FORM_URL;
+  const [showSuccess, setShowSuccess] = React.useState(false);
+
+  const go = () => {
+    const popup = window.open(N8N_FORM_URL, 'casaflux_form', 'width=600,height=700,scrollbars=yes,resizable=yes');
+    if (popup) {
+      const timer = setInterval(() => {
+        if (popup.closed) {
+          clearInterval(timer);
+          setShowSuccess(true);
+        }
+      }, 500);
+    } else {
+      window.location.href = N8N_FORM_URL;
+    }
+  };
 
   const s = (base: React.CSSProperties): React.CSSProperties => base;
 
   return (
     <main style={{ background: "var(--white)" }}>
+
+      {/* SUCCESS OVERLAY */}
+      {showSuccess && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ background: "white", borderRadius: 20, padding: 48, maxWidth: 480, width: "90%", textAlign: "center" as const, boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+            <div style={{ width: 64, height: 64, background: "#fff5f4", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, margin: "0 auto 20px" }}>✓</div>
+            <h2 className="font-fraunces" style={{ fontSize: 26, fontWeight: 700, marginBottom: 12 }}>Report submitted!</h2>
+            <p style={{ fontSize: 15, color: "var(--gray-600)", lineHeight: 1.7, marginBottom: 12 }}>Your inspection report is being analyzed by AI. You'll receive a detailed email with every finding, cost estimate, and negotiation tip within 60 seconds.</p>
+            <p style={{ fontSize: 13, color: "var(--gray-400)", marginBottom: 28 }}>Check your inbox — including spam folder.</p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+              <button onClick={() => setShowSuccess(false)} style={{ padding: "12px 28px", background: "var(--orange)", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Got it</button>
+              <button onClick={() => { setShowSuccess(false); go(); }} style={{ padding: "12px 28px", background: "transparent", color: "var(--orange)", border: "1.5px solid var(--orange)", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Upload another →</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* NAV */}
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: "0 40px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--border)" }}>
