@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 
 const N8N_FORM_URL = "https://flux1.app.n8n.cloud/form/f6f81001-50f4-42d9-bc6c-b29df62e00d4";
+const WORKER_URL = "https://casaflux-proxy.casaflux.workers.dev";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -42,17 +43,18 @@ export default function Home() {
     const formData = new FormData(formRef.current);
     const file = formData.get("Inspection_Report") as File;
     if (!file || file.size === 0) { alert("Please attach your inspection PDF."); return; }
-
     setFormState("submitting");
-
     try {
-      await fetch(N8N_FORM_URL, {
+      const response = await fetch(WORKER_URL, {
         method: "POST",
         body: formData,
-        mode: "no-cors",
       });
-      // no-cors means success if no network error thrown
-      setFormState("success");
+      const result = await response.json();
+      if (result.success) {
+        setFormState("success");
+      } else {
+        setFormState("error");
+      }
     } catch {
       setFormState("error");
     }
