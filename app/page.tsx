@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 const N8N_FORM_URL = "https://flux1.app.n8n.cloud/form/f6f81001-50f4-42d9-bc6c-b29df62e00d4";
 
@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     const obs = new IntersectionObserver(
       (entries) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } }),
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     );
     document.querySelectorAll(".reveal").forEach(el => obs.observe(el));
     if (typeof window !== 'undefined' && window.location.search.includes('submitted=true')) {
@@ -22,233 +22,279 @@ export default function Home() {
   const go = () => { window.location.href = N8N_FORM_URL; };
 
   return (
-    <main style={{ background: "var(--white)" }}>
+    <main style={{ background: "#fff", fontFamily: "'Inter', sans-serif", color: "#111" }}>
 
       {/* SUCCESS OVERLAY */}
       {showSuccess && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div style={{ background: "white", borderRadius: 20, padding: "40px 36px", maxWidth: 460, width: "100%", textAlign: "center" as const, boxShadow: "0 24px 64px rgba(0,0,0,0.2)" }}>
-            <div style={{ width: 60, height: 60, background: "var(--orange-light)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, margin: "0 auto 20px" }}>✓</div>
-            <h2 className="font-fraunces" style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>Report submitted!</h2>
-            <p style={{ fontSize: 14, color: "var(--gray-600)", lineHeight: 1.7, marginBottom: 8 }}>Your inspection is being analyzed by AI. You'll get a detailed email with every finding, repair costs, and negotiation tips in under 60 seconds.</p>
-            <p style={{ fontSize: 12, color: "var(--gray-400)", marginBottom: 28 }}>Check your inbox — and spam folder just in case.</p>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+          <div style={{ background: "white", borderRadius: 16, padding: "40px 36px", maxWidth: 440, width: "100%", textAlign: "center" as const }}>
+            <div style={{ fontSize: 40, marginBottom: 16 }}>✅</div>
+            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 700, marginBottom: 10 }}>Report submitted!</h2>
+            <p style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 24 }}>Your inspection is being analyzed. Check your inbox in under 60 seconds — every finding, repair cost, and negotiation tip.</p>
             <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" as const }}>
-              <button onClick={() => setShowSuccess(false)} style={{ padding: "12px 24px", background: "var(--gray-100)", color: "var(--text)", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Back to site</button>
-              <button onClick={() => { setShowSuccess(false); go(); }} style={{ padding: "12px 24px", background: "var(--orange)", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Upload another →</button>
+              <button onClick={() => setShowSuccess(false)} style={{ padding: "11px 22px", background: "#f0f0f0", color: "#111", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Back to site</button>
+              <button onClick={() => { setShowSuccess(false); go(); }} style={{ padding: "11px 22px", background: "#ff6d5a", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Upload another →</button>
             </div>
           </div>
         </div>
       )}
 
       {/* NAV */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", background: "rgba(255,255,255,0.96)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--border)" }}>
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, height: 58, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", background: "rgba(255,255,255,0.96)", backdropFilter: "blur(10px)", borderBottom: "1px solid #eee" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 30, height: 30, background: "var(--orange)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Fraunces',serif", fontSize: 14, fontWeight: 700, color: "white" }}>C</div>
-          <span className="font-fraunces" style={{ fontSize: 18, fontWeight: 600 }}>CasaFlux</span>
+          <div style={{ width: 28, height: 28, background: "#ff6d5a", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Fraunces',serif", fontSize: 13, fontWeight: 700, color: "white" }}>C</div>
+          <span style={{ fontFamily: "'Fraunces',serif", fontSize: 17, fontWeight: 700 }}>CasaFlux</span>
         </div>
         <div className="nav-links" style={{ display: "flex", alignItems: "center", gap: 28 }}>
-          {[["How It Works","#how-it-works"],["Features","#features"],["Pricing","#pricing"]].map(([l,h]) => (
-            <a key={l} href={h} style={{ fontSize: 14, fontWeight: 500, color: "var(--gray-600)", textDecoration: "none" }}>{l}</a>
-          ))}
+          <a href="#how-it-works" style={{ fontSize: 13, color: "#555", textDecoration: "none" }}>How It Works</a>
+          <a href="#example" style={{ fontSize: 13, color: "#555", textDecoration: "none" }}>Example</a>
+          <a href="#pricing" style={{ fontSize: 13, color: "#555", textDecoration: "none" }}>Pricing</a>
         </div>
-        <button onClick={go} style={{ background: "var(--orange)", color: "white", padding: "9px 18px", borderRadius: 8, fontSize: 14, fontWeight: 600, border: "none", cursor: "pointer", whiteSpace: "nowrap" as const }}>Upload Report →</button>
+        <button onClick={go} style={{ background: "#ff6d5a", color: "white", padding: "8px 18px", borderRadius: 8, fontSize: 13, fontWeight: 600, border: "none", cursor: "pointer" }}>Try Free →</button>
       </nav>
 
       {/* HERO */}
-      <section style={{ minHeight: "100vh", paddingTop: 60, background: "var(--white)", display: "flex", alignItems: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(var(--gray-100) 1px,transparent 1px),linear-gradient(90deg,var(--gray-100) 1px,transparent 1px)", backgroundSize: "48px 48px", opacity: 0.4, pointerEvents: "none" }} />
-        <div className="hero-grid" style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 40px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", position: "relative", zIndex: 2, width: "100%" }}>
-          <div>
-            <div className="animate-fade-up" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--orange-light)", border: "1px solid #ffd5d0", borderRadius: 100, padding: "5px 12px 5px 8px", fontSize: 12, fontWeight: 600, color: "var(--orange-dark)", marginBottom: 24 }}>
-              <span style={{ width: 16, height: 16, background: "var(--orange)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: "white" }}>✦</span>
-              AI Inspection Intelligence
-            </div>
-            <h1 className="animate-fade-up-1 font-fraunces" style={{ fontSize: "clamp(38px,5vw,62px)", fontWeight: 700, lineHeight: 1.05, letterSpacing: -2, marginBottom: 20 }}>
-              Every finding.<br />Every cost.<br /><em style={{ color: "var(--orange)", fontStyle: "italic" }}>Instantly clear.</em>
-            </h1>
-            <p className="animate-fade-up-2" style={{ fontSize: 16, color: "var(--gray-600)", lineHeight: 1.7, marginBottom: 32, maxWidth: 440 }}>
-              Upload any home inspection PDF. CasaFlux reads every finding, estimates repair costs, flags safety hazards, and delivers a clean report to your inbox in under 60 seconds.
-            </p>
-            <div className="animate-fade-up-3" style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 36, flexWrap: "wrap" as const }}>
-              <button onClick={go} style={{ background: "var(--orange)", color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, border: "none", cursor: "pointer", boxShadow: "0 8px 24px rgba(255,109,90,0.3)" }}>Upload Your Report →</button>
-              <a href="#how-it-works" style={{ color: "var(--gray-600)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>See how it works ↓</a>
-            </div>
-            <div className="animate-fade-up-4" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ display: "flex" }}>
-                {["JR","ML","SK","DP"].map((init,i) => (
-                  <div key={i} style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid white", background: "var(--orange)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: "white", marginLeft: i===0?0:-8, position: "relative", zIndex: 4-i }}>{init}</div>
-                ))}
+      <section style={{ minHeight: "100vh", paddingTop: 58, display: "flex", alignItems: "center", background: "#fff", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 70% 50%, #fff5f4 0%, transparent 60%)", pointerEvents: "none" }} />
+        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "80px 32px", width: "100%", position: "relative", zIndex: 2 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }} className="hero-grid">
+            <div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff5f4", border: "1px solid #ffd5d0", borderRadius: 100, padding: "4px 12px 4px 8px", fontSize: 12, fontWeight: 600, color: "#e55a47", marginBottom: 24 }}>
+                <span style={{ width: 6, height: 6, background: "#ff6d5a", borderRadius: "50%", display: "inline-block" }} />
+                AI-Powered · Results in 60 seconds
               </div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600 }}>Trusted by Virginia realtors</div>
-                <div style={{ fontSize: 12, color: "var(--gray-400)" }}>5 free reports — no credit card</div>
+              <h1 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(36px,5vw,58px)", fontWeight: 700, lineHeight: 1.05, letterSpacing: -2, marginBottom: 20 }}>
+                Turn any inspection<br />report into a<br /><span style={{ color: "#ff6d5a", fontStyle: "italic" }}>negotiation weapon.</span>
+              </h1>
+              <p style={{ fontSize: 16, color: "#555", lineHeight: 1.75, marginBottom: 32, maxWidth: 440 }}>
+                Upload your inspection PDF. Our AI reads every finding, estimates repair costs, flags safety hazards, and delivers a clean report to your inbox — in under 60 seconds.
+              </p>
+              <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" as const, marginBottom: 28 }}>
+                <button onClick={go} style={{ background: "#ff6d5a", color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer", boxShadow: "0 8px 24px rgba(255,109,90,0.35)" }}>
+                  Try 2 Free Reports →
+                </button>
+                <a href="#example" style={{ fontSize: 14, color: "#555", textDecoration: "none", fontWeight: 500 }}>See an example ↓</a>
               </div>
+              <div style={{ fontSize: 13, color: "#888" }}>✓ No credit card for free reports &nbsp;·&nbsp; ✓ $9/report after &nbsp;·&nbsp; ✓ Cancel anytime</div>
             </div>
-          </div>
 
-          {/* Card - hidden on mobile via CSS */}
-          <div className="hero-card animate-float" style={{ position: "relative" }}>
-            <div style={{ position: "absolute", top: -12, right: -12, zIndex: 10, background: "var(--orange)", color: "white", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 100, fontFamily: "'DM Mono',monospace" }}>✦ AI Analyzed</div>
-            <div style={{ background: "white", borderRadius: 14, boxShadow: "0 20px 60px rgba(0,0,0,0.08)", border: "1px solid var(--border)", overflow: "hidden" }}>
-              <div style={{ background: "var(--orange)", padding: "18px 20px", color: "white" }}>
-                <div style={{ fontSize: 10, textTransform: "uppercase" as const, letterSpacing: 2, opacity: 0.8, marginBottom: 4, fontFamily: "'DM Mono',monospace" }}>CasaFlux — Report Ready</div>
-                <div className="font-fraunces" style={{ fontSize: 17, fontWeight: 700, marginBottom: 2 }}>142 Maple Ridge Drive</div>
-                <div style={{ fontSize: 12, opacity: 0.85 }}>Sarah Chen · May 28, 2026</div>
-              </div>
-              <div style={{ padding: "14px 18px", display: "flex", gap: 10 }}>
-                <div style={{ flex: 1, background: "var(--gray-50)", borderRadius: 8, padding: 12, textAlign: "center" as const, border: "1px solid var(--border)" }}>
-                  <div style={{ fontSize: 10, textTransform: "uppercase" as const, letterSpacing: 1, color: "var(--gray-400)", fontFamily: "'DM Mono',monospace", marginBottom: 4 }}>Score</div>
-                  <div className="font-fraunces" style={{ fontSize: 28, fontWeight: 700, color: "#d97706" }}>74</div>
-                  <div style={{ fontSize: 10, color: "var(--gray-400)" }}>/ 100</div>
+            {/* MOCK REPORT CARD */}
+            <div className="hero-card" style={{ position: "relative" }}>
+              <div style={{ background: "white", borderRadius: 14, boxShadow: "0 20px 60px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)", border: "1px solid #eee", overflow: "hidden" }}>
+                {/* Card header */}
+                <div style={{ background: "#ff6d5a", padding: "16px 20px", color: "white" }}>
+                  <div style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase" as const, opacity: 0.8, marginBottom: 4, fontFamily: "'DM Mono',monospace" }}>CasaFlux Report Ready</div>
+                  <div style={{ fontFamily: "'Fraunces',serif", fontSize: 16, fontWeight: 700 }}>4821 Maple Creek Drive</div>
+                  <div style={{ fontSize: 12, opacity: 0.85, marginTop: 2 }}>Manassas, VA · Prepared for Sarah Chen</div>
                 </div>
-                <div style={{ flex: 2, background: "var(--gray-50)", borderRadius: 8, padding: 12, border: "1px solid var(--border)" }}>
-                  <div style={{ fontSize: 10, textTransform: "uppercase" as const, letterSpacing: 1, color: "var(--gray-400)", fontFamily: "'DM Mono',monospace", marginBottom: 4 }}>Repair Cost</div>
-                  <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>$4,200 – $8,800</div>
-                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap" as const }}>
-                    {[["3 Urgent","#FEE2E2","#DC2626"],["7 Monitor","#FEF3C7","#D97706"],["11 Good","#DCFCE7","#16A34A"]].map(([l,bg,c]) => (
-                      <span key={l} style={{ fontSize: 9, fontWeight: 600, padding: "2px 6px", borderRadius: 3, background: bg, color: c }}>{l}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div style={{ padding: "0 18px 16px", display: "flex", flexDirection: "column" as const, gap: 6 }}>
-                {[
-                  { title: "Double-Tapped Breakers", meta: "Electrical", cost: "$800–$1,500", color: "#DC2626" },
-                  { title: "HVAC Near End of Life", meta: "HVAC", cost: "$3,500–$6,000", color: "#DC2626" },
-                  { title: "Roof Flashing Separation", meta: "Roof", cost: "$400–$800", color: "#EA580C" },
-                ].map((f,i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--gray-50)" }}>
-                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: f.color, flexShrink: 0 }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 11, fontWeight: 600 }}>{f.title}</div>
-                      <div style={{ fontSize: 10, color: "var(--gray-400)" }}>{f.meta}</div>
+                {/* Stats */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 0, borderBottom: "1px solid #eee" }}>
+                  {[["Score", "68", "#d97706"], ["Urgent", "4", "#dc2626"], ["Est. Cost", "$12.4k", "#111"]].map(([label, val, color], i) => (
+                    <div key={i} style={{ padding: "14px 12px", textAlign: "center" as const, borderRight: i < 2 ? "1px solid #eee" : "none" }}>
+                      <div style={{ fontSize: 10, color: "#999", textTransform: "uppercase" as const, letterSpacing: 1, marginBottom: 4, fontFamily: "'DM Mono',monospace" }}>{label}</div>
+                      <div style={{ fontSize: 20, fontWeight: 800, color, fontFamily: "'Fraunces',serif" }}>{val}</div>
                     </div>
-                    <div style={{ fontSize: 10, fontWeight: 600, whiteSpace: "nowrap" as const }}>{f.cost}</div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                {/* Findings */}
+                <div style={{ padding: "12px 16px", display: "flex", flexDirection: "column" as const, gap: 6 }}>
+                  {[
+                    { dot: "#dc2626", title: "Main Panel Needs Replacement", meta: "Electrical · $2,800–$4,500", badge: "🔴 Urgent", badgeBg: "#FEE2E2", badgeColor: "#DC2626" },
+                    { dot: "#dc2626", title: "HVAC Unit Failing — 2001", meta: "HVAC · $3,500–$6,000", badge: "🔴 Urgent", badgeBg: "#FEE2E2", badgeColor: "#DC2626" },
+                    { dot: "#d97706", title: "Roof Flashing Separation", meta: "Roof · $400–$800", badge: "🟡 Monitor", badgeBg: "#FEF3C7", badgeColor: "#D97706" },
+                    { dot: "#059669", title: "Foundation — No Issues Found", meta: "Foundation · No cost", badge: "✅ Good", badgeBg: "#DCFCE7", badgeColor: "#059669" },
+                  ].map((f, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 7, border: "1px solid #f0f0f0", background: "#fafafa" }}>
+                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: f.dot, flexShrink: 0 }} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>{f.title}</div>
+                        <div style={{ fontSize: 10, color: "#999" }}>{f.meta}</div>
+                      </div>
+                      <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: f.badgeBg, color: f.badgeColor, whiteSpace: "nowrap" as const }}>{f.badge}</span>
+                    </div>
+                  ))}
+                  <div style={{ fontSize: 11, color: "#999", textAlign: "center" as const, paddingTop: 4 }}>+ 31 more findings</div>
+                </div>
+                {/* Tip */}
+                <div style={{ margin: "0 16px 16px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 12px" }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#059669", marginBottom: 3, fontFamily: "'DM Mono',monospace" }}>💡 NEGOTIATION TIP</div>
+                  <div style={{ fontSize: 11, color: "#166534", lineHeight: 1.5 }}>Request $12,000 credit at closing for electrical panel + HVAC. Both are safety issues — seller is motivated to close.</div>
+                </div>
               </div>
-            </div>
-            <div style={{ position: "absolute", bottom: -14, left: -28, background: "white", borderRadius: 10, padding: "10px 14px", boxShadow: "0 8px 30px rgba(0,0,0,0.1)", border: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 30, height: 30, background: "var(--orange-light)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📧</div>
-              <div>
-                <div style={{ fontSize: 11, fontWeight: 700 }}>Report delivered</div>
-                <div style={{ fontSize: 10, color: "var(--gray-400)" }}>sarah@realty.com · 47 sec</div>
-              </div>
+              {/* Badge */}
+              <div style={{ position: "absolute", top: -10, right: -10, background: "#111", color: "white", fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 100, fontFamily: "'DM Mono',monospace" }}>Delivered in 47 sec</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how-it-works" style={{ background: "var(--gray-50)", borderTop: "1px solid var(--border)" }}>
-        <div className="section-pad" style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 40px" }}>
-          <div className="reveal" style={{ marginBottom: 48 }}>
-            <div className="font-mono" style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "2px", color: "var(--orange)", marginBottom: 12 }}>The Process</div>
-            <h2 className="font-fraunces" style={{ fontSize: "clamp(28px,4vw,44px)", fontWeight: 700, letterSpacing: -1.5, lineHeight: 1.1, marginBottom: 12 }}>From PDF to clear insights<br />in under a minute.</h2>
-            <p style={{ fontSize: 15, color: "var(--gray-600)", lineHeight: 1.7, maxWidth: 460 }}>No manual entry. No decoding inspector shorthand. Just upload and get back to closing.</p>
+      <section id="how-it-works" style={{ background: "#fafafa", borderTop: "1px solid #eee", borderBottom: "1px solid #eee" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "80px 32px" }} className="section-pad">
+          <div className="reveal" style={{ marginBottom: 48, textAlign: "center" as const }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 2, color: "#ff6d5a", marginBottom: 12, fontFamily: "'DM Mono',monospace" }}>How It Works</div>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(28px,4vw,42px)", fontWeight: 700, letterSpacing: -1.5, marginBottom: 12 }}>Three steps. 60 seconds.</h2>
+            <p style={{ fontSize: 15, color: "#555", maxWidth: 460, margin: "0 auto" }}>No setup. No learning curve. Upload and you're done.</p>
           </div>
-          <div className="section-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 36 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 32 }} className="section-grid-3">
             {[
-              { num: "01", icon: "📄", title: "Upload the PDF", desc: "Drop in any inspection report — Spectora, HomeGauge, or any inspector format." },
-              { num: "02", icon: "🧠", title: "AI reads everything", desc: "Every finding extracted, urgency assigned, repair costs estimated, safety hazards flagged." },
-              { num: "03", icon: "✉️", title: "Report hits your inbox", desc: "Clean, sorted report with cost ranges, contractor types, and negotiation tips." },
-            ].map((step,i) => (
-              <div key={i} className="reveal" style={{ transitionDelay: `${i*0.1}s` }}>
-                <div className="font-fraunces" style={{ fontSize: 64, fontWeight: 700, color: "var(--gray-200)", lineHeight: 1, marginBottom: -4, letterSpacing: -3 }}>{step.num}</div>
-                <div style={{ fontSize: 26, marginBottom: 12 }}>{step.icon}</div>
-                <h3 className="font-fraunces" style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{step.title}</h3>
-                <p style={{ fontSize: 14, color: "var(--gray-600)", lineHeight: 1.7 }}>{step.desc}</p>
+              { num: "01", icon: "📄", title: "Upload the PDF", desc: "Any inspector format — Spectora, HomeGauge, or any other. Just drag and drop." },
+              { num: "02", icon: "🧠", title: "AI reads everything", desc: "Every finding analyzed. Urgency ranked. Repair costs estimated. Safety hazards flagged. Negotiation tips written." },
+              { num: "03", icon: "📧", title: "Check your inbox", desc: "A clean, organized report arrives in under 60 seconds. Share it with your seller instantly." },
+            ].map((step, i) => (
+              <div key={i} className="reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
+                <div style={{ fontFamily: "'Fraunces',serif", fontSize: 56, fontWeight: 700, color: "#eee", lineHeight: 1, marginBottom: -4, letterSpacing: -3 }}>{step.num}</div>
+                <div style={{ fontSize: 28, marginBottom: 10 }}>{step.icon}</div>
+                <h3 style={{ fontFamily: "'Fraunces',serif", fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{step.title}</h3>
+                <p style={{ fontSize: 14, color: "#555", lineHeight: 1.7 }}>{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section id="features" style={{ background: "var(--white)", borderTop: "1px solid var(--border)" }}>
-        <div className="section-pad" style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 40px" }}>
+      {/* WHAT YOU GET — EXAMPLE */}
+      <section id="example" style={{ background: "#fff" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "80px 32px" }} className="section-pad">
           <div className="reveal" style={{ marginBottom: 48 }}>
-            <div className="font-mono" style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "2px", color: "var(--orange)", marginBottom: 12 }}>What You Get</div>
-            <h2 className="font-fraunces" style={{ fontSize: "clamp(28px,4vw,44px)", fontWeight: 700, letterSpacing: -1.5, lineHeight: 1.1, marginBottom: 12 }}>Built for realtors,<br />not inspectors.</h2>
-            <p style={{ fontSize: 15, color: "var(--gray-600)", lineHeight: 1.7, maxWidth: 460 }}>Every feature answers one question: what does a listing agent need to know right now?</p>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 2, color: "#ff6d5a", marginBottom: 12, fontFamily: "'DM Mono',monospace" }}>What You Get</div>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(28px,4vw,42px)", fontWeight: 700, letterSpacing: -1.5, marginBottom: 12 }}>Every finding. Every cost.<br />Every negotiation tip.</h2>
+            <p style={{ fontSize: 15, color: "#555", maxWidth: 500 }}>Here's exactly what lands in your inbox after every upload.</p>
           </div>
-          <div className="section-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
-            {[
-              { icon: "🔴", title: "Urgency Classification", desc: "Every finding classified as Urgent, Monitor, or Good." },
-              { icon: "💰", title: "Repair Cost Estimates", desc: "Cost ranges for every finding before you negotiate." },
-              { icon: "🤝", title: "Negotiation Tips", desc: "AI-generated guidance for every finding." },
-              { icon: "⚠️", title: "Safety Hazard Flags", desc: "Safety issues surfaced to the top automatically." },
-              { icon: "🔧", title: "Contractor Matching", desc: "Each finding tagged with the right contractor type." },
-              { icon: "📊", title: "Property Score", desc: "A 0–100 health score for instant condition overview." },
-            ].map((f,i) => (
-              <div key={i} className="reveal" style={{ background: "var(--gray-50)", borderRadius: 10, padding: 22, border: "1px solid var(--border)", transitionDelay: `${(i%3)*0.1}s` }}>
-                <div style={{ fontSize: 24, marginBottom: 12 }}>{f.icon}</div>
-                <h3 className="font-fraunces" style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{f.title}</h3>
-                <p style={{ fontSize: 13, color: "var(--gray-600)", lineHeight: 1.6 }}>{f.desc}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }} className="section-grid-2">
+            {/* Left — finding examples */}
+            <div className="reveal" style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+              {[
+                { severity: "urgent", color: "#dc2626", bg: "#FEE2E2", icon: "🔴", category: "Electrical", title: "Double-Tapped Circuit Breakers", location: "Main electrical panel, basement", desc: "Multiple circuits sharing a single breaker — a fire hazard and code violation. Requires licensed electrician to correct.", cost: "$800 – $1,500", tip: "Request as a condition of closing. Cite the fire hazard — sellers rarely push back on safety items." },
+                { severity: "urgent", color: "#dc2626", bg: "#FEE2E2", icon: "🔴", category: "HVAC", title: "Air Handler Near End of Life", location: "Utility closet, 2nd floor", desc: "Unit is 21 years old. Average lifespan is 15-20 years. Inefficient and likely to fail within 1-2 years.", cost: "$3,500 – $6,000", tip: "Ask for $4,500 credit at closing. Frame it as a shared risk — they avoid a failed sale if it breaks before closing." },
+                { severity: "monitor", color: "#d97706", bg: "#FEF3C7", icon: "🟡", category: "Plumbing", title: "Slow Drain — Master Bath", location: "Master bathroom, 2nd floor", desc: "Drain clears slowly. Likely minor buildup. Monitor and clear within 6 months.", cost: "$150 – $300", tip: "Bundle with other small items into a repair credit request. Not worth negotiating alone." },
+                { severity: "good", color: "#059669", bg: "#DCFCE7", icon: "✅", category: "Foundation", title: "Foundation in Good Condition", location: "Full perimeter", desc: "No cracks, settling, or moisture intrusion observed. Foundation is sound.", cost: "No cost", tip: "Highlight this to your seller — a clean foundation is a strong selling point." },
+              ].map((f, i) => (
+                <div key={i} className="reveal" style={{ background: "#fafafa", border: "1px solid #eee", borderRadius: 10, padding: 16, transitionDelay: `${i * 0.05}s` }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 8 }}>
+                    <div style={{ fontSize: 14 }}>{f.icon}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2, flexWrap: "wrap" as const }}>
+                        <span style={{ fontSize: 13, fontWeight: 700 }}>{f.title}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, padding: "1px 6px", borderRadius: 4, background: f.bg, color: f.color }}>{f.category}</span>
+                      </div>
+                      <div style={{ fontSize: 11, color: "#999", marginBottom: 6 }}>📍 {f.location}</div>
+                      <div style={{ fontSize: 12, color: "#444", lineHeight: 1.6, marginBottom: 8 }}>{f.desc}</div>
+                      <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" as const }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#111" }}>💰 {f.cost}</span>
+                        <div style={{ fontSize: 11, color: "#059669", background: "#f0fdf4", padding: "3px 8px", borderRadius: 5, border: "1px solid #bbf7d0", lineHeight: 1.5 }}>💡 {f.tip}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Right — summary stats */}
+            <div className="reveal" style={{ transitionDelay: "0.2s" }}>
+              <div style={{ background: "#fff", border: "1px solid #eee", borderRadius: 14, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ background: "#ff6d5a", padding: "20px 24px", color: "white" }}>
+                  <div style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase" as const, opacity: 0.8, marginBottom: 4, fontFamily: "'DM Mono',monospace" }}>Report Summary</div>
+                  <div style={{ fontFamily: "'Fraunces',serif", fontSize: 18, fontWeight: 700 }}>4821 Maple Creek Drive</div>
+                  <div style={{ fontSize: 12, opacity: 0.85 }}>35 total findings analyzed</div>
+                </div>
+                <div style={{ padding: 20, display: "flex", flexDirection: "column" as const, gap: 14 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <div style={{ background: "#fafafa", border: "1px solid #eee", borderRadius: 8, padding: 14, textAlign: "center" as const }}>
+                      <div style={{ fontSize: 10, color: "#999", textTransform: "uppercase" as const, letterSpacing: 1, fontFamily: "'DM Mono',monospace", marginBottom: 4 }}>Score</div>
+                      <div style={{ fontFamily: "'Fraunces',serif", fontSize: 32, fontWeight: 800, color: "#d97706" }}>68</div>
+                      <div style={{ fontSize: 10, color: "#999" }}>out of 100</div>
+                    </div>
+                    <div style={{ background: "#fafafa", border: "1px solid #eee", borderRadius: 8, padding: 14, textAlign: "center" as const }}>
+                      <div style={{ fontSize: 10, color: "#999", textTransform: "uppercase" as const, letterSpacing: 1, fontFamily: "'DM Mono',monospace", marginBottom: 4 }}>Total Cost</div>
+                      <div style={{ fontFamily: "'Fraunces',serif", fontSize: 22, fontWeight: 800, color: "#111", lineHeight: 1.1 }}>$8k–$14k</div>
+                      <div style={{ fontSize: 10, color: "#999" }}>estimated repairs</div>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    {[["4 Urgent", "#dc2626", "#FEE2E2"], ["18 Monitor", "#d97706", "#FEF3C7"], ["13 Good", "#059669", "#DCFCE7"]].map(([l, c, bg]) => (
+                      <div key={l} style={{ flex: 1, background: bg, borderRadius: 7, padding: "8px 6px", textAlign: "center" as const }}>
+                        <div style={{ fontSize: 12, fontWeight: 800, color: c }}>{l}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: 12 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: "#059669", marginBottom: 4, fontFamily: "'DM Mono',monospace" }}>AI SUMMARY</div>
+                    <div style={{ fontSize: 12, color: "#166534", lineHeight: 1.6 }}>This property has significant deferred maintenance primarily in the electrical and HVAC systems. The foundation and structure are sound. Recommend requesting a $10,000–$12,000 credit at closing targeting the 4 urgent items.</div>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column" as const, gap: 6 }}>
+                    {["Urgency ranking (Urgent / Monitor / Good)", "Repair cost estimate for every finding", "Right contractor type for each repair", "Safety hazard flags", "DIY vs professional breakdown", "Negotiation tip per finding"].map((feat, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#444" }}>
+                        <span style={{ color: "#ff6d5a", fontWeight: 700, fontSize: 14 }}>✓</span>
+                        {feat}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* PRICING */}
-      <section id="pricing" style={{ background: "var(--gray-50)", borderTop: "1px solid var(--border)" }}>
-        <div className="section-pad" style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 40px" }}>
+      <section id="pricing" style={{ background: "#fafafa", borderTop: "1px solid #eee" }}>
+        <div style={{ maxWidth: 800, margin: "0 auto", padding: "80px 32px", textAlign: "center" as const }} className="section-pad">
           <div className="reveal" style={{ marginBottom: 48 }}>
-            <div className="font-mono" style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "2px", color: "var(--orange)", marginBottom: 12 }}>Pricing</div>
-            <h2 className="font-fraunces" style={{ fontSize: "clamp(28px,4vw,44px)", fontWeight: 700, letterSpacing: -1.5, lineHeight: 1.1, marginBottom: 12 }}>Simple pricing.<br />Start for free.</h2>
-            <p style={{ fontSize: 15, color: "var(--gray-600)", lineHeight: 1.7, maxWidth: 380 }}>No contracts. Your first 5 reports are on us.</p>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 2, color: "#ff6d5a", marginBottom: 12, fontFamily: "'DM Mono',monospace" }}>Pricing</div>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(28px,4vw,42px)", fontWeight: 700, letterSpacing: -1.5, marginBottom: 12 }}>Simple. No surprises.</h2>
+            <p style={{ fontSize: 15, color: "#555" }}>Start free. Pay only when you need more.</p>
           </div>
-          <div className="pricing-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
-            {[
-              { name: "Starter", price: "$0", period: "Free forever", desc: "Try the full platform.", features: ["5 inspection reports","Full AI analysis","Email delivery","Cost estimates","Negotiation tips"], cta: "Start Free →", featured: false },
-              { name: "Agent Pro", price: "$99", period: "/ month", desc: "Unlimited for individual agents.", features: ["Unlimited reports","Full AI analysis","Email delivery","Report history","Priority processing"], cta: "Get Started →", featured: true },
-              { name: "Brokerage", price: "$499", period: "/ month", desc: "Up to 25 agents.", features: ["Up to 25 agents","Broker analytics","Custom branding","Team workspace","Dedicated support"], cta: "Contact Sales →", featured: false },
-            ].map((plan,i) => (
-              <div key={i} className="reveal" style={{ borderRadius: 14, padding: 28, background: plan.featured?"var(--orange)":"white", border: plan.featured?"none":"1px solid var(--border)", position: "relative", transitionDelay: `${i*0.1}s` }}>
-                {plan.featured && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", background: "var(--text)", color: "white", fontSize: 10, fontWeight: 700, padding: "3px 12px", borderRadius: 100, letterSpacing: 1, textTransform: "uppercase" as const, fontFamily: "'DM Mono',monospace", whiteSpace: "nowrap" as const }}>Most Popular</div>}
-                <div className="font-mono" style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: 2, color: plan.featured?"rgba(255,255,255,0.7)":"var(--orange)", marginBottom: 14 }}>{plan.name}</div>
-                <div className="font-fraunces" style={{ fontSize: 44, fontWeight: 700, color: plan.featured?"white":"var(--text)", lineHeight: 1, letterSpacing: -2, marginBottom: 4 }}>{plan.price}</div>
-                <div style={{ fontSize: 13, color: plan.featured?"rgba(255,255,255,0.7)":"var(--gray-400)", marginBottom: 14 }}>{plan.period}</div>
-                <div style={{ fontSize: 13, color: plan.featured?"rgba(255,255,255,0.8)":"var(--gray-600)", lineHeight: 1.6, marginBottom: 18, paddingBottom: 18, borderBottom: `1px solid ${plan.featured?"rgba(255,255,255,0.2)":"var(--border)"}` }}>{plan.desc}</div>
-                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column" as const, gap: 8, marginBottom: 24 }}>
-                  {plan.features.map((feat,j) => (
-                    <li key={j} style={{ fontSize: 13, color: plan.featured?"rgba(255,255,255,0.9)":"var(--text)", display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ width: 15, height: 15, background: plan.featured?"rgba(255,255,255,0.25)":"var(--orange-light)", color: plan.featured?"white":"var(--orange)", borderRadius: "50%", fontSize: 8, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>✓</span>
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-                <button onClick={go} style={{ width: "100%", padding: "12px", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", background: plan.featured?"white":"transparent", color: plan.featured?"var(--orange)":"var(--orange)", border: plan.featured?"none":"1.5px solid var(--orange)", fontFamily: "'Inter',sans-serif" }}>{plan.cta}</button>
-              </div>
-            ))}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, maxWidth: 600, margin: "0 auto 32px" }} className="section-grid-2">
+            {/* Free */}
+            <div className="reveal" style={{ background: "white", border: "1px solid #eee", borderRadius: 14, padding: 28, textAlign: "left" as const }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 2, color: "#999", fontFamily: "'DM Mono',monospace", marginBottom: 16 }}>Free</div>
+              <div style={{ fontFamily: "'Fraunces',serif", fontSize: 40, fontWeight: 800, color: "#111", lineHeight: 1, marginBottom: 4 }}>$0</div>
+              <div style={{ fontSize: 13, color: "#999", marginBottom: 20 }}>No credit card required</div>
+              <ul style={{ listStyle: "none", display: "flex", flexDirection: "column" as const, gap: 8, marginBottom: 24 }}>
+                {["2 free reports", "Full AI analysis", "Email delivery", "All features included"].map((f, i) => (
+                  <li key={i} style={{ fontSize: 13, color: "#444", display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ color: "#ff6d5a", fontWeight: 700 }}>✓</span>{f}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={go} style={{ width: "100%", padding: 12, background: "transparent", color: "#ff6d5a", border: "1.5px solid #ff6d5a", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Start Free →</button>
+            </div>
+            {/* Pay per report */}
+            <div className="reveal" style={{ background: "#ff6d5a", border: "none", borderRadius: 14, padding: 28, textAlign: "left" as const, position: "relative" }} >
+              <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", background: "#111", color: "white", fontSize: 10, fontWeight: 700, padding: "3px 12px", borderRadius: 100, letterSpacing: 1, textTransform: "uppercase" as const, fontFamily: "'DM Mono',monospace", whiteSpace: "nowrap" as const }}>Most Popular</div>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 2, color: "rgba(255,255,255,0.7)", fontFamily: "'DM Mono',monospace", marginBottom: 16 }}>Pay Per Report</div>
+              <div style={{ fontFamily: "'Fraunces',serif", fontSize: 40, fontWeight: 800, color: "white", lineHeight: 1, marginBottom: 4 }}>$9</div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", marginBottom: 20 }}>per report · no subscription</div>
+              <ul style={{ listStyle: "none", display: "flex", flexDirection: "column" as const, gap: 8, marginBottom: 24 }}>
+                {["Pay only when you need it", "Full AI analysis every time", "Email delivery", "All features included"].map((f, i) => (
+                  <li key={i} style={{ fontSize: 13, color: "rgba(255,255,255,0.9)", display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ color: "white", fontWeight: 700 }}>✓</span>{f}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={go} style={{ width: "100%", padding: 12, background: "white", color: "#ff6d5a", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Get Started →</button>
+            </div>
           </div>
+          <p className="reveal" style={{ fontSize: 13, color: "#999" }}>Need unlimited reports for your whole office? <a href="mailto:hello@casaflux.com" style={{ color: "#ff6d5a", textDecoration: "none", fontWeight: 600 }}>Contact us for team pricing →</a></p>
         </div>
       </section>
 
-      {/* CTA */}
-      <div className="cta-section" style={{ margin: "0 40px 80px" }}>
-        <div style={{ background: "var(--orange)", borderRadius: 20, padding: "64px 40px", textAlign: "center" as const }}>
-          <div className="reveal">
-            <div className="font-mono" style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "2px", color: "rgba(255,255,255,0.7)", marginBottom: 16 }}>Get Started Today</div>
-            <h2 className="font-fraunces" style={{ fontSize: "clamp(28px,4vw,48px)", fontWeight: 700, color: "white", lineHeight: 1.05, letterSpacing: -1.5, marginBottom: 14 }}>Upload your first report.<br />See it in 60 seconds.</h2>
-            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.8)", lineHeight: 1.7, marginBottom: 32, maxWidth: 420, margin: "0 auto 32px" }}>Join realtors in Virginia already using CasaFlux. First 5 reports free.</p>
-            <button onClick={go} style={{ background: "white", color: "var(--orange)", padding: "14px 36px", borderRadius: 10, fontSize: 15, fontWeight: 600, border: "none", cursor: "pointer", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>Upload a Report Now →</button>
-            <div style={{ marginTop: 14, fontSize: 12, color: "rgba(255,255,255,0.6)" }}>🔒 No credit card · 5 free reports · Results in 60 seconds</div>
-          </div>
+      {/* FINAL CTA */}
+      <section style={{ background: "#fff", borderTop: "1px solid #eee", padding: "80px 32px", textAlign: "center" as const }} className="section-pad">
+        <div className="reveal" style={{ maxWidth: 560, margin: "0 auto" }}>
+          <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(28px,4vw,44px)", fontWeight: 700, letterSpacing: -1.5, marginBottom: 14 }}>Ready to negotiate smarter?</h2>
+          <p style={{ fontSize: 15, color: "#555", lineHeight: 1.7, marginBottom: 28 }}>Upload your first inspection report free. No credit card. Results in 60 seconds.</p>
+          <button onClick={go} style={{ background: "#ff6d5a", color: "white", padding: "15px 36px", borderRadius: 10, fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer", boxShadow: "0 8px 24px rgba(255,109,90,0.3)" }}>Try 2 Free Reports →</button>
+          <div style={{ marginTop: 14, fontSize: 12, color: "#aaa" }}>🔒 No credit card · First 2 reports free · $9/report after</div>
         </div>
-      </div>
+      </section>
 
       {/* FOOTER */}
-      <footer style={{ borderTop: "1px solid var(--border)", padding: "28px 40px" }}>
-        <div className="footer-inner" style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span className="font-fraunces" style={{ fontSize: 16, fontWeight: 600 }}>CasaFlux</span>
-          <span style={{ fontSize: 12, color: "var(--gray-400)" }}>© 2026 CasaFlux. Built for real estate professionals.</span>
-          <div className="footer-links" style={{ display: "flex", gap: 20 }}>
-            {[["How It Works","#how-it-works"],["Features","#features"],["Pricing","#pricing"],["Contact","mailto:hello@casaflux.com"]].map(([l,h]) => (
-              <a key={l} href={h} style={{ fontSize: 12, color: "var(--gray-400)", textDecoration: "none" }}>{l}</a>
-            ))}
-          </div>
+      <footer style={{ borderTop: "1px solid #eee", padding: "24px 32px" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12 }}>
+          <span style={{ fontFamily: "'Fraunces',serif", fontSize: 15, fontWeight: 700 }}>CasaFlux</span>
+          <span style={{ fontSize: 12, color: "#aaa" }}>© 2026 CasaFlux. Built for real estate professionals.</span>
+          <a href="mailto:hello@casaflux.com" style={{ fontSize: 12, color: "#aaa", textDecoration: "none" }}>hello@casaflux.com</a>
         </div>
       </footer>
     </main>
