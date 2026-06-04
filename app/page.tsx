@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 
 const N8N_FORM_URL = "https://flux1.app.n8n.cloud/form/f6f81001-50f4-42d9-bc6c-b29df62e00d4";
+const STRIPE_URL = "https://buy.stripe.com/test_eVqcN52Hm58oa8y0Ir9R600";
 
 export default function Home() {
   const [showSuccess, setShowSuccess] = React.useState(false);
@@ -272,7 +273,7 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <button onClick={go} style={{ width: "100%", padding: 12, background: "white", color: "#ff6d5a", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Get Started →</button>
+              <button onClick={() => window.location.href = STRIPE_URL} style={{ width: "100%", padding: 12, background: "white", color: "#ff6d5a", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Get Started →</button>
             </div>
           </div>
           <p className="reveal" style={{ fontSize: 13, color: "#999" }}>Need unlimited reports for your whole office? <a href="mailto:hello@casaflux.com" style={{ color: "#ff6d5a", textDecoration: "none", fontWeight: 600 }}>Contact us for team pricing →</a></p>
