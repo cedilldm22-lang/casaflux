@@ -44,7 +44,7 @@ export default function Home() {
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, height: 58, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", background: "rgba(255,255,255,0.96)", backdropFilter: "blur(10px)", borderBottom: "1px solid #eee" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{ width: 28, height: 28, background: "#ff6d5a", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Fraunces',serif", fontSize: 13, fontWeight: 700, color: "white" }}>C</div>
-          <span style={{ fontFamily: "'Fraunces',serif", fontSize: 17, fontWeight: 700 }}>CasaFlux</span>
+          <span style={{ fontFamily: "'Fraunces',serif", fontSize: 17, fontWeight: 700 }}>SmartListings</span>
         </div>
         <div className="nav-links" style={{ display: "flex", alignItems: "center", gap: 28 }}>
           <a href="#how-it-works" style={{ fontSize: 13, color: "#555", textDecoration: "none" }}>How It Works</a>
@@ -84,7 +84,7 @@ export default function Home() {
               <div style={{ background: "white", borderRadius: 14, boxShadow: "0 20px 60px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)", border: "1px solid #eee", overflow: "hidden" }}>
                 {/* Card header */}
                 <div style={{ background: "#ff6d5a", padding: "16px 20px", color: "white" }}>
-                  <div style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase" as const, opacity: 0.8, marginBottom: 4, fontFamily: "'DM Mono',monospace" }}>CasaFlux Report Ready</div>
+                  <div style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase" as const, opacity: 0.8, marginBottom: 4, fontFamily: "'DM Mono',monospace" }}>SmartListings Report Ready</div>
                   <div style={{ fontFamily: "'Fraunces',serif", fontSize: 16, fontWeight: 700 }}>4821 Maple Creek Drive</div>
                   <div style={{ fontSize: 12, opacity: 0.85, marginTop: 2 }}>Manassas, VA · Prepared for Sarah Chen</div>
                 </div>
@@ -276,7 +276,7 @@ export default function Home() {
               <button onClick={() => window.location.href = STRIPE_URL} style={{ width: "100%", padding: 12, background: "white", color: "#ff6d5a", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Get Started →</button>
             </div>
           </div>
-          <p className="reveal" style={{ fontSize: 13, color: "#999" }}>Need unlimited reports for your whole office? <a href="mailto:hello@casaflux.com" style={{ color: "#ff6d5a", textDecoration: "none", fontWeight: 600 }}>Contact us for team pricing →</a></p>
+          <p className="reveal" style={{ fontSize: 13, color: "#999" }}>Need unlimited reports for your whole office? <a href="mailto:hello@smartlistings.app" style={{ color: "#ff6d5a", textDecoration: "none", fontWeight: 600 }}>Contact us for team pricing →</a></p>
         </div>
       </section>
 
@@ -293,9 +293,9 @@ export default function Home() {
       {/* FOOTER */}
       <footer style={{ borderTop: "1px solid #eee", padding: "24px 32px" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12 }}>
-          <span style={{ fontFamily: "'Fraunces',serif", fontSize: 15, fontWeight: 700 }}>CasaFlux</span>
-          <span style={{ fontSize: 12, color: "#aaa" }}>© 2026 CasaFlux. Built for real estate professionals.</span>
-          <a href="mailto:hello@casaflux.com" style={{ fontSize: 12, color: "#aaa", textDecoration: "none" }}>hello@casaflux.com</a>
+          <span style={{ fontFamily: "'Fraunces',serif", fontSize: 15, fontWeight: 700 }}>SmartListings</span>
+          <span style={{ fontSize: 12, color: "#aaa" }}>© 2026 SmartListings. Built for real estate professionals.</span>
+          <a href="mailto:hello@smartlistings.app" style={{ fontSize: 12, color: "#aaa", textDecoration: "none" }}>hello@smartlistings.app</a>
         </div>
       </footer>
     </main>
